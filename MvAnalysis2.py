@@ -1,6 +1,6 @@
 # Course Code: IT8104
 # Course Name: Data Analysis
-# Assignment: 1 - Scenario-based analytical report using data analysis tools and techniques
+# Assignment: 2 - Scenario-based analytical report using web analysis
 # 
 # File: MVAnalysis2.py
 # Author: Gautam Sarup
@@ -110,14 +110,14 @@ def preview_cooked_data(cooked_df):
     if debug:
         xlwings.view(cooked_df)
 
-def remove_outliers(cooked_df):
+#def remove_outliers(cooked_df):
     # sns.boxplot(cooked_df['Purchase'])
     # cutoff = input("Enter cutoff value: ")
     # cutoff = int(cutoff)
-    cutoff=40000
+    # cutoff=0
     
-    deletable_df = cooked_df[cooked_df["Purchase"] > cutoff].index
-    cooked_df.drop(index = deletable_df, inplace = True)
+    # deletable_df = cooked_df[cooked_df["Purchase"] > cutoff].index
+    # cooked_df.drop(index = deletable_df, inplace = True)
 
 def export_cooked_data(cooked_df):
     export = True
@@ -125,98 +125,98 @@ def export_cooked_data(cooked_df):
         cooked_df.to_csv("Data\\train_preprocessed.csv")
 
 def Predict(df, model_type):
-        X = df[["Product_Category_1", "Gender", "Stay_In_Current_City_Years", "Marital_Status",
-                "City_Category_A", "City_Category_B", "City_Category_C",
-                 "Age_0-17", "Age_18-25", "Age_26-35", "Age_36-45", "Age_46-50", "Age_51-55", "Age_55+",
-                 "Occupation_0", "Occupation_1", "Occupation_2", "Occupation_3", "Occupation_4",
-                 "Occupation_5", "Occupation_6", "Occupation_7", "Occupation_8", "Occupation_9",
-                 "Occupation_10", "Occupation_11", "Occupation_12", "Occupation_13", "Occupation_14",
-                 "Occupation_15", "Occupation_16", "Occupation_17", "Occupation_18", "Occupation_19",
-                 "Occupation_20"]]
-        y = df["Purchase"]
+    X = df[["Product_Category_1", "Gender", "Stay_In_Current_City_Years", "Marital_Status",
+            "City_Category_A", "City_Category_B", "City_Category_C",
+            "Age_0-17", "Age_18-25", "Age_26-35", "Age_36-45", "Age_46-50", "Age_51-55", "Age_55+",
+            "Occupation_0", "Occupation_1", "Occupation_2", "Occupation_3", "Occupation_4",
+            "Occupation_5", "Occupation_6", "Occupation_7", "Occupation_8", "Occupation_9",
+            "Occupation_10", "Occupation_11", "Occupation_12", "Occupation_13", "Occupation_14",
+            "Occupation_15", "Occupation_16", "Occupation_17", "Occupation_18", "Occupation_19",
+            "Occupation_20"]]
+    y = df["Purchase"]
  
-        match model_type:
-            case Model.LINEAR:
-                model_id = "Linear"
-                regr = linear_model.LinearRegression(fit_intercept = True, copy_X = True)
-                regr.fit(X.values, y.values)
-            case Model.LINEAR_B:
-                model_id ="linear_b"
-                LinearRegression().fit(X.value, y.values)
-            case Model.DECISION_TREE:
-                model_id = "Preferred model: Decision tree regressor"
-                regr = DecisionTreeRegressor(max_depth = 35)
-                regr.fit(X.values, y.values)
-            case Model.RIDGE:
-                model_id = "Ridge"
-                regr = linear_model.Ridge(fit_intercept = True, copy_X = True)
-                regr.fit(X.values, y.values)
-            case _:
-                print("unknown model")
+    match model_type:
+        case Model.LINEAR:
+            model_id = "Linear"
+            regr = linear_model.LinearRegression(fit_intercept = True, copy_X = True)
+            regr.fit(X.values, y.values)
+        case Model.LINEAR_B:
+            model_id ="linear_b"
+            LinearRegression().fit(X.value, y.values)
+        case Model.DECISION_TREE:
+            model_id = "Preferred model: Decision tree regressor"
+            regr = DecisionTreeRegressor(max_depth = 35)
+            regr.fit(X.values, y.values)
+        case Model.RIDGE:
+            model_id = "Ridge"
+            regr = linear_model.Ridge(fit_intercept = True, copy_X = True)
+            regr.fit(X.values, y.values)
+        case _:
+            print("unknown model")
                 
-        known_purchases = []
-        predicted_purchases = []
+    known_purchases = []
+    predicted_purchases = []
         
-        rows = len(df.index)
+    rows = len(df.index)
 
-        print("Running model: " + model_id)
+    print("Running model: " + model_id)
         
-        for idx in df.index:
-            if idx == 0:
-                continue
+    for idx in df.index:
+        if idx == 0:
+            continue
             
-            user_id = df["User_ID"][idx]
-            prod_cat_1 = df["Product_Category_1"][idx]
-            gender = df["Gender"][idx]
-            stay = df["Stay_In_Current_City_Years"][idx]
-            marital_status = df["Marital_Status"][idx]
-            city_cat_a = df["City_Category_A"][idx]
-            city_cat_b = df["City_Category_B"][idx]
-            city_cat_c = df["City_Category_C"][idx]
-            age_0 = df["Age_0-17"][idx]
-            age_18 = df["Age_18-25"][idx]
-            age_26 = df["Age_26-35"][idx]
-            age_36 = df["Age_36-45"][idx]
-            age_46 = df["Age_46-50"][idx]
-            age_51 = df["Age_51-55"][idx]
-            age_55 = df["Age_55+"][idx]
-            occupation_0 = df["Occupation_0"][idx]
-            occupation_1 = df["Occupation_1"][idx]
-            occupation_2 = df["Occupation_2"][idx]
-            occupation_3 = df["Occupation_3"][idx]
-            occupation_4 = df["Occupation_4"][idx]
-            occupation_5 = df["Occupation_5"][idx]
-            occupation_6 = df["Occupation_6"][idx]
-            occupation_7 = df["Occupation_7"][idx]
-            occupation_8 = df["Occupation_8"][idx]
-            occupation_9 = df["Occupation_9"][idx]
-            occupation_10 = df["Occupation_10"][idx]
-            occupation_11 = df["Occupation_11"][idx]
-            occupation_12 = df["Occupation_12"][idx]
-            occupation_13 = df["Occupation_13"][idx]
-            occupation_14 = df["Occupation_14"][idx]
-            occupation_15 = df["Occupation_15"][idx]
-            occupation_16 = df["Occupation_16"][idx]
-            occupation_17 = df["Occupation_17"][idx]
-            occupation_18 = df["Occupation_18"][idx]
-            occupation_19 = df["Occupation_19"][idx]
-            occupation_20 = df["Occupation_20"][idx]
+        user_id = df["User_ID"][idx]
+        prod_cat_1 = df["Product_Category_1"][idx]
+        gender = df["Gender"][idx]
+        stay = df["Stay_In_Current_City_Years"][idx]
+        marital_status = df["Marital_Status"][idx]
+        city_cat_a = df["City_Category_A"][idx]
+        city_cat_b = df["City_Category_B"][idx]
+        city_cat_c = df["City_Category_C"][idx]
+        age_0 = df["Age_0-17"][idx]
+        age_18 = df["Age_18-25"][idx]
+        age_26 = df["Age_26-35"][idx]
+        age_36 = df["Age_36-45"][idx]
+        age_46 = df["Age_46-50"][idx]
+        age_51 = df["Age_51-55"][idx]
+        age_55 = df["Age_55+"][idx]
+        occupation_0 = df["Occupation_0"][idx]
+        occupation_1 = df["Occupation_1"][idx]
+        occupation_2 = df["Occupation_2"][idx]
+        occupation_3 = df["Occupation_3"][idx]
+        occupation_4 = df["Occupation_4"][idx]
+        occupation_5 = df["Occupation_5"][idx]
+        occupation_6 = df["Occupation_6"][idx]
+        occupation_7 = df["Occupation_7"][idx]
+        occupation_8 = df["Occupation_8"][idx]
+        occupation_9 = df["Occupation_9"][idx]
+        occupation_10 = df["Occupation_10"][idx]
+        occupation_11 = df["Occupation_11"][idx]
+        occupation_12 = df["Occupation_12"][idx]
+        occupation_13 = df["Occupation_13"][idx]
+        occupation_14 = df["Occupation_14"][idx]
+        occupation_15 = df["Occupation_15"][idx]
+        occupation_16 = df["Occupation_16"][idx]
+        occupation_17 = df["Occupation_17"][idx]
+        occupation_18 = df["Occupation_18"][idx]
+        occupation_19 = df["Occupation_19"][idx]
+        occupation_20 = df["Occupation_20"][idx]
             
-            known_purchase = df["Purchase"][idx]
+        known_purchase = df["Purchase"][idx]
             
-            predicted_purchase = regr.predict([[
-                prod_cat_1, gender, stay, marital_status, city_cat_a, city_cat_b, city_cat_c,
-                age_0, age_18, age_26, age_36, age_46, age_51, age_55,
-                occupation_0, occupation_1, occupation_2, occupation_3, occupation_4, occupation_5,
-                occupation_6, occupation_7, occupation_8, occupation_9, occupation_10, occupation_11,
-                occupation_12, occupation_13, occupation_14, occupation_15, occupation_16, occupation_17,
-                occupation_18, occupation_19, occupation_20
-             ]])
+        predicted_purchase = regr.predict([[
+            prod_cat_1, gender, stay, marital_status, city_cat_a, city_cat_b, city_cat_c,
+            age_0, age_18, age_26, age_36, age_46, age_51, age_55,
+            occupation_0, occupation_1, occupation_2, occupation_3, occupation_4, occupation_5,
+            occupation_6, occupation_7, occupation_8, occupation_9, occupation_10, occupation_11,
+            occupation_12, occupation_13, occupation_14, occupation_15, occupation_16, occupation_17,
+            occupation_18, occupation_19, occupation_20
+            ]])
             
-            known_purchases.append(known_purchase)
-            predicted_purchases.append(predicted_purchase[0])
+        known_purchases.append(known_purchase)
+        predicted_purchases.append(predicted_purchase[0])
 
-        return known_purchases, predicted_purchases
+    return known_purchases, predicted_purchases
 
 def calc_metrics(known_purchases, predicted_purchases):
     r2 = r2_score(known_purchases, predicted_purchases)
@@ -239,7 +239,7 @@ def __main__():
     cooked_df = remove_duplicates(raw_df)
     print ("Cooked dataset with duplicates removed: " + str(len(cooked_df)))
     
-    remove_outliers(cooked_df)
+    #remove_outliers(cooked_df)
     
     cooked_df = group_data(cooked_df)
     print ("Cooked dataset grouped by User and Product: " + str(len(cooked_df)))    
