@@ -10,6 +10,7 @@
 # from http.cookies import CookieError
 # from imp import cache_from_source
 # from re import X
+import csv
 from importlib.metadata import packages_distributions
 from statistics import LinearRegression
 from typing import Self
@@ -113,7 +114,7 @@ def remove_outliers(cooked_df):
     # sns.boxplot(cooked_df['Purchase'])
     # cutoff = input("Enter cutoff value: ")
     # cutoff = int(cutoff)
-    cutoff=20000
+    cutoff=40000
     
     deletable_df = cooked_df[cooked_df["Purchase"] > cutoff].index
     cooked_df.drop(index = deletable_df, inplace = True)
@@ -224,6 +225,13 @@ def calc_metrics(known_purchases, predicted_purchases):
     
     return r2, mse, mae
 
+def export_predicted(filename, predicted):
+    path = open("Data\\" + filename, "wb")
+    cols = []
+    cols.append("Predicted Purchase")
+    df = pd.DataFrame(predicted, columns = cols)
+    df.to_csv(path)
+    
 def __main__():
     raw_df = load_data()
     print("Raw dataset rows: " + str(len(raw_df)))
@@ -248,6 +256,7 @@ def __main__():
     print("Running model: Decision Tree")
     known_purchases, predicted_purchases = Predict(preprocessed_data, Model.DECISION_TREE)
     r2, mse, mae = calc_metrics(known_purchases, predicted_purchases)
+    export_predicted("predicted_decision_tree.csv", predicted_purchases)
     print("The R2 for this model is : " + str(r2))
     print("The Mean Squared Error for this model is : " + str(mse))
     print("The Mean Absolute Error for this model is : " + str(mae))
@@ -256,22 +265,25 @@ def __main__():
     print("Running model: Linear")
     known_purchases, predicted_purchases = Predict(preprocessed_data, Model.LINEAR)
     r2, mse, mae = calc_metrics(known_purchases, predicted_purchases)
+    export_predicted("predicted_linear.csv", predicted_purchases)
     print("The R2 for this model is : " + str(r2))
     print("The Mean Squared Error for this model is : " + str(mse))
     print("The Mean Absolute Error for this model is : " + str(mae))
     print("")
     
-    print("Running model: LinearB")
-    known_purchases, predicted_purchases = Predict(preprocessed_data, Model.LINEAR_B)
-    r2, mse, mae = calc_metrics(known_purchases, predicted_purchases)
-    print("The R2 for this model is : " + str(r2))
-    print("The Mean Squared Error for this model is : " + str(mse))
-    print("The Mean Absolute Error for this model is : " + str(mae))
-    print("")
+    # print("Running model: LinearB")
+    # known_purchases, predicted_purchases = Predict(preprocessed_data, Model.LINEAR_B)
+    # r2, mse, mae = calc_metrics(known_purchases, predicted_purchases)
+    # export_predicted("predicted_linear_b.csv", predicted_purchases)
+    # print("The R2 for this model is : " + str(r2))
+    # print("The Mean Squared Error for this model is : " + str(mse))
+    # print("The Mean Absolute Error for this model is : " + str(mae))
+    # print("")
     
     print("Running model: Ridge")
     known_purchases, predicted_purchases = Predict(preprocessed_data, Model.RIDGE)
     r2, mse, mae = calc_metrics(known_purchases, predicted_purchases)
+    export_predicted("predicted_ridge.csv", predicted_purchases)
     print("The R2 for this model is : " + str(r2))
     print("The Mean Squared Error for this model is : " + str(mse))
     print("The Mean Absolute Error for this model is : " + str(mae))
